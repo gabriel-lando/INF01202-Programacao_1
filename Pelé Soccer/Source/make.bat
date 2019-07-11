@@ -1,0 +1,1 @@
+gcc main.c arquivos.c mover.c cursor.c print.c jogo.c sys.c menu.c bola.c -o Jogo.exe -lconio

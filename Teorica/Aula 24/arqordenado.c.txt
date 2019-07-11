@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main( )
+{
+    FILE *arq1;
+    int numero, lido, inseriu=0;
+
+
+    // este bloco apenas cria se nao existe mas se existe deixa como esta
+    if ((arq1 = fopen("ordenado.num", "rb")) != NULL) //testa se o arquivo existe
+        fclose(arq1); // se existe fecha
+    else
+        fclose ( fopen("ordenado.num", "wb") ); // se n‹o existe cria vazio
+
+    // aqui faz a inserc‹o ordenada
+    if ((arq1 = fopen("ordenado.num", "r+b")) == NULL)
+        printf("Erro ao abrir arquivo entrada \n");
+    else
+    {
+        scanf("%d", &numero);
+        fseek( arq1, 0*sizeof(int), SEEK_END );
+        while (!feof(arq1) && !inseriu )
+        {
+            fseek( arq1, -1*sizeof(int), SEEK_CUR );
+            if (fread(&lido, 1, sizeof(int), arq1) != NULL )  // leu numero
+            {
+                printf("lido %d. posicao %d\n", lido, ftell(arq1));
+                if( numero > lido )  //grava aqui
+                {
+                    printf("insere %d aqui. \n", numero);
+                    fseek( arq1, 0*sizeof(int), SEEK_CUR );
+                    fwrite( &numero, 1, sizeof(int), arq1 );
+                    inseriu = 1;
+                }
+                else     // caso geral de copiar para baixo
+                {
+                    printf("copia %d para baixo. \n", lido);
+                    fseek( arq1, 0*sizeof(int), SEEK_CUR );
+                    fwrite( &lido, 1, sizeof(int), arq1 );
+                    fseek( arq1, -2*sizeof(int), SEEK_CUR );
+
+                    if( ftell(arq1) == 0 )   // se esta inserindo no inicio
+                    {
+                        printf("insere %d no inicio. \n", numero);
+                        fwrite( &numero, 1, sizeof(int), arq1 );
+                        inseriu = 1;
+                    }
+                }
+            }
+            else if( !inseriu )    // se esta vazio
+            {
+                printf("insere %d no inicio. \n", numero);
+                fseek( arq1, -1*sizeof(int), SEEK_CUR );
+                fwrite( &numero, 1, sizeof(int), arq1 );
+                inseriu = 1;
+            }
+        }
+
+        printf("Terminou escrita \n");
+        fclose(arq1);
+    }
+
+    if ((arq1 = fopen("ordenado.num", "rb")) == NULL)
+        printf("Erro ao abrir arquivo saida \n");
+    else
+    {
+        printf("Listando arquivo: \n");
+        while (!feof(arq1))
+            if (fread(&lido, 1, sizeof(int), arq1) != NULL )
+            {
+                printf( "%d\n", lido );
+            }
+        fclose (arq1);
+    }
+
+}
+
+

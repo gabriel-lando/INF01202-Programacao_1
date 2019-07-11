@@ -1,0 +1,7 @@
+Narumi chataz
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+abcdefghijklmnopqrstuvwxyz
+
+@M.M: The standard permits EOF to have any negative value of type int. But it's entirely possible that all existing
+implementations happen to define it as -1 (actually (-1), the macro definition needs the parentheses). You shouldn't
+depend on it being equal to -1, but saying that it's always -1 could well be technically accurate. – Keith Thompson May 9 '16 at 19:30
